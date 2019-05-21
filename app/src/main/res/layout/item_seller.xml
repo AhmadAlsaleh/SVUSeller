@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/sellerIV"
+            android:layout_width="75dp"
+            android:layout_height="75dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="5dp"
+            tools:ignore="UnusedAttribute">
+
+            <TextView
+                android:id="@+id/sellerNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textSize="25dp"/>
+
+            <TextView
+                android:id="@+id/sellerNumberTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="number"
+                android:textSize="15dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/sellerEditIV"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_edit"
+            android:layout_marginHorizontal="5dp"
+            tools:ignore="UnusedAttribute" />
+
+        <ImageView
+            android:id="@+id/sellerDeleteIV"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_delete"
+            android:layout_marginHorizontal="5dp"
+            tools:ignore="UnusedAttribute" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginHorizontal="5dp"
+        tools:ignore="UnusedAttribute" />
+
+</LinearLayout>

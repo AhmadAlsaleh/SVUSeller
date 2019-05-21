@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SellerActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/addSellerNameET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Seller name"
+                android:inputType="textPersonName"/>
+
+            <EditText
+                android:id="@+id/addSellerNumberET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Seller number"
+                android:inputType="numberSigned"/>
+
+            <Spinner
+                android:id="@+id/addSellerSP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/addSellerBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="add seller"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/addSellerIV"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sellersRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
