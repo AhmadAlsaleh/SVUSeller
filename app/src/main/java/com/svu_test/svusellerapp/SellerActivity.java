@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,8 +32,9 @@ public class SellerActivity extends AppCompatActivity {
     private EditText addSellerNameET, addSellerNumberET;
     private Spinner addSellerRegionSP;
     private RecyclerView sellerRV;
-
     private Bitmap selectedBM;
+    private LinearLayout sellerEditLL;
+    private Button sellerEditBTN, sellerEditCancelBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +46,12 @@ public class SellerActivity extends AppCompatActivity {
         addSellerNameET = findViewById(R.id.addSellerNameET);
         addSellerNumberET = findViewById(R.id.addSellerNumberET);
         addSellerRegionSP = findViewById(R.id.addSellerSP);
+        sellerEditLL = findViewById(R.id.sellerEditLL);
+        sellerEditCancelBTN = findViewById(R.id.sellerEditCancelBTN);
+        sellerEditBTN = findViewById(R.id.sellerEditBTN);
 
         final ArrayAdapter aa = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_spinner_dropdown_item,
                 new String[]{"Cost", "North", "South", "East", "Lebanon"}
         );
         addSellerRegionSP.setAdapter(aa);
@@ -61,12 +66,25 @@ public class SellerActivity extends AppCompatActivity {
             }
         });
 
+        sellerEditCancelBTN.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                sellerEditLL.setVisibility(View.GONE);
+                addSellerBTN.setVisibility(View.VISIBLE);
+
+                addSellerNameET.setText("");
+                addSellerNumberET.setText("");
+                sellerIV.setImageDrawable(getDrawable(R.drawable.ic_launcher_background));
+                selectedBM = null;
+            }
+        });
+
         addSellerBTN.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 if (checkData()) {
-
                     SellerModel sellerModel = new SellerModel("", addSellerNameET.getText().toString(),
                             addSellerRegionSP.getSelectedItem().toString(),
                             addSellerNumberET.getText().toString(),
@@ -80,7 +98,6 @@ public class SellerActivity extends AppCompatActivity {
                     addSellerNumberET.setText("");
 
                     SellerActivity.this.recreate();
-
                 }
             }
         });
@@ -110,6 +127,32 @@ public class SellerActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void setEditDate(final SellerModel sellerModel) throws NullPointerException {
+        addSellerBTN.setVisibility(View.GONE);
+        sellerEditLL.setVisibility(View.VISIBLE);
+        addSellerNameET.setText(sellerModel.getName());
+        addSellerNumberET.setText(sellerModel.getNumber());
+        sellerIV.setImageBitmap(sellerModel.getImage());
+        selectedBM = sellerModel.getImage();
+
+        sellerEditBTN.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                if (checkData()) {
+                    SellerModel model = new SellerModel(sellerModel.getId(), addSellerNameET.getText().toString(),
+                            addSellerRegionSP.getSelectedItem().toString(),
+                            addSellerNumberET.getText().toString(),
+                            selectedBM);
+
+                    DBHelper dbHelper = new DBHelper(SellerActivity.this);
+                    dbHelper.updateSeller(model);
+                    SellerActivity.this.recreate();
+                }
+            }
+        });
     }
 
     @Override

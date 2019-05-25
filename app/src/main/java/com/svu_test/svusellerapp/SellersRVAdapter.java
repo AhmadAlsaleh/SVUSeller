@@ -1,7 +1,10 @@
 package com.svu_test.svusellerapp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +20,7 @@ public class SellersRVAdapter extends RecyclerView.Adapter<SellersRVAdapter.View
     private ArrayList<SellerModel> sellerModels;
     private SellerActivity activity;
 
-    public SellersRVAdapter(SellerActivity activity, Context context, ArrayList<SellerModel> sellerModels) {
+    SellersRVAdapter(SellerActivity activity, Context context, ArrayList<SellerModel> sellerModels) {
         this.context = context;
         this.activity = activity;
         this.sellerModels = sellerModels;
@@ -31,26 +34,38 @@ public class SellersRVAdapter extends RecyclerView.Adapter<SellersRVAdapter.View
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final SellerModel sellerModel = sellerModels.get(i);
 
         viewHolder.image.setImageBitmap(sellerModel.getImage());
         viewHolder.name.setText(sellerModel.getName());
-        viewHolder.number.setText(sellerModel.getNumber());
+        viewHolder.number.setText("Number " + sellerModel.getNumber());
+        viewHolder.region.setText("Region " + sellerModel.getRegion());
 
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DBHelper(context).deleteSeller(sellerModel.getId());
-                SellersRVAdapter.this.activity.recreate();
+
+                new AlertDialog.Builder(context)
+                        .setMessage("Sure to Delete " + sellerModel.getName())
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new DBHelper(context).deleteSeller(sellerModel.getId());
+                                SellersRVAdapter.this.activity.recreate();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .create().show();
             }
         });
 
         viewHolder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SellersRVAdapter.this.activity.setEditDate(sellerModel);
             }
         });
     }
@@ -60,16 +75,17 @@ public class SellersRVAdapter extends RecyclerView.Adapter<SellersRVAdapter.View
         return this.sellerModels.size();
     }
 
-    protected class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView name, number;
+        private TextView name, number, region;
         private ImageView delete, edit, image;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             number = itemView.findViewById(R.id.sellerNumberTV);
             name = itemView.findViewById(R.id.sellerNameTV);
+            region = itemView.findViewById(R.id.sellerRegionTV);
             delete = itemView.findViewById(R.id.sellerDeleteIV);
             edit = itemView.findViewById(R.id.sellerEditIV);
             image = itemView.findViewById(R.id.sellerIV);

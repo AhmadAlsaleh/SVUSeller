@@ -13,4 +13,10 @@
         android:layout_height="wrap_content"
         android:text="Sellers"/>
 
+    <Button
+        android:id="@+id/toInfoBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="info"/>
+
 </LinearLayout>

@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button toSellersBTN;
+    private Button toSellersBTN, infoBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +25,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SellerActivity.class));
             }
         });
-
+        infoBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SellerInfoActivity.class));
+            }
+        });
     }
 
     private void findViews() {
         toSellersBTN = findViewById(R.id.toSellersBTN);
+        infoBTN = findViewById(R.id.toInfoBTN);
     }
 
 }

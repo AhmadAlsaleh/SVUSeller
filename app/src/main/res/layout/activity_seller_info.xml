@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SellerInfoActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/infoIV"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="5dp"
+            android:layout_gravity="center">
+
+            <Spinner
+                android:id="@+id/infoSellersSP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/infoRegionTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="coast"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginHorizontal="5dp"
+        tools:ignore="UnusedAttribute" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Sales"
+                android:textAlignment="center"
+                android:textSize="25dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="year:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/infoYearET"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="2019"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="month:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/infoMonthET"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="June"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp"
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Coast:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/coastET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="10,000,000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp"
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="North:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/northET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="10,000,000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp"
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="South:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/southET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="10,000,000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp"
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="East:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/eastET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="10,000,000"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp"
+                tools:ignore="UnusedAttribute">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lebanon:"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="5dp"/>
+
+                <EditText
+                    android:id="@+id/lebanonET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberSigned"
+                    android:hint="10,000,000"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/calcComBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="calculate commission"/>
+
+            <TextView
+                android:id="@+id/infoComTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="your commission"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:id="@+id/saveComBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="save"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
