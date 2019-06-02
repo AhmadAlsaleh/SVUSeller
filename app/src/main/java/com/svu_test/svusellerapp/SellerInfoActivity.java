@@ -3,6 +3,9 @@ package com.svu_test.svusellerapp;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,22 +31,10 @@ public class SellerInfoActivity extends AppCompatActivity {
     private TextView infoRegionTV;
     private ArrayList<SellerModel> sellerModels;
 
-    private Button calcComBTN, saveComBTN;
-    private TextView infoComTV;
+    private Button calcComBTN;
     private EditText yearET, coastET, northET, southET, eastET, lebanonET;
     private int selectedSeller = 0;
     private int finalCom = 0;
-
-    private void clearData() {
-        yearET.setText("");
-        coastET.setText("");
-        northET.setText("");
-        southET.setText("");
-        eastET.setText("");
-        lebanonET.setText("");
-        finalCom = 0;
-        infoComTV.setText("Your Commission");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,92 +93,100 @@ public class SellerInfoActivity extends AppCompatActivity {
                         }
                     }
                     finalCom = com;
-                    infoComTV.setText(String.valueOf(com) + " S.P.");
 
-                }
-            }
-        });
-
-        saveComBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!checkInput()) {
-                    Toast.makeText(SellerInfoActivity.this, "Check your Input", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                final DBHelper dbHelper = new DBHelper(SellerInfoActivity.this);
-                if (dbHelper.checkCom(sellerModels.get(selectedSeller).getId(),
-                        yearET.getText().toString(), monthSP.getSelectedItem().toString())) {
-
-                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            Integer.parseInt(coastET.getText().toString()), "Coast"));
-
-                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            Integer.parseInt(northET.getText().toString()), "North"));
-
-                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            Integer.parseInt(southET.getText().toString()), "South"));
-
-                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            Integer.parseInt(eastET.getText().toString()), "East"));
-
-                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
-
-                    dbHelper.insertCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
-                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                            finalCom));
-
-                    clearData();
-
-                } else {
                     new AlertDialog.Builder(SellerInfoActivity.this)
-                            .setMessage("This Commission is already exist,\nWe will replace it, Are you agree?")
-                            .setNegativeButton("No", null)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setMessage("Your Commission is " + finalCom)
+                            .setNegativeButton("Cancel", null)
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            Integer.parseInt(coastET.getText().toString()), "Coast"));
-
-                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            Integer.parseInt(northET.getText().toString()), "North"));
-
-                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            Integer.parseInt(southET.getText().toString()), "South"));
-
-                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            Integer.parseInt(eastET.getText().toString()), "East"));
-
-                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
-
-                                    dbHelper.updateCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
-                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
-                                            finalCom));
-
-                                    clearData();
+                                    saveData();
                                 }
                             })
                             .create()
                             .show();
-                }
 
+                }
             }
         });
+    }
 
+    private void saveData() {
+        if (!checkInput()) {
+            Toast.makeText(SellerInfoActivity.this, "Check your Input", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final DBHelper dbHelper = new DBHelper(SellerInfoActivity.this);
+        if (dbHelper.checkCom(sellerModels.get(selectedSeller).getId(),
+                yearET.getText().toString(), monthSP.getSelectedItem().toString())) {
+
+            dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    Integer.parseInt(coastET.getText().toString()), "Coast"));
+
+            dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    Integer.parseInt(northET.getText().toString()), "North"));
+
+            dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    Integer.parseInt(southET.getText().toString()), "South"));
+
+            dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    Integer.parseInt(eastET.getText().toString()), "East"));
+
+            dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
+
+            dbHelper.insertCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
+                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                    finalCom));
+
+            clearData();
+
+        } else {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+            new AlertDialog.Builder(SellerInfoActivity.this)
+                    .setMessage("This Commission is already exist,\nWe will replace it, Are you agree?")
+                    .setNegativeButton("No", null)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    Integer.parseInt(coastET.getText().toString()), "Coast"));
+
+                            dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    Integer.parseInt(northET.getText().toString()), "North"));
+
+                            dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    Integer.parseInt(southET.getText().toString()), "South"));
+
+                            dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    Integer.parseInt(eastET.getText().toString()), "East"));
+
+                            dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
+
+                            dbHelper.updateCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
+                                    yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                    finalCom));
+
+                            clearData();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 
     private void findViews() {
@@ -196,8 +195,6 @@ public class SellerInfoActivity extends AppCompatActivity {
         infoRegionTV = findViewById(R.id.infoRegionTV);
 
         calcComBTN = findViewById(R.id.calcComBTN);
-        saveComBTN = findViewById(R.id.saveComBTN);
-        infoComTV = findViewById(R.id.infoComTV);
 
         yearET = findViewById(R.id.infoYearET);
         coastET = findViewById(R.id.coastET);
@@ -205,6 +202,17 @@ public class SellerInfoActivity extends AppCompatActivity {
         southET = findViewById(R.id.southET);
         eastET = findViewById(R.id.eastET);
         lebanonET = findViewById(R.id.lebanonET);
+    }
+
+
+    private void clearData() {
+        yearET.setText("");
+        coastET.setText("");
+        northET.setText("");
+        southET.setText("");
+        eastET.setText("");
+        lebanonET.setText("");
+        finalCom = 0;
     }
 
     private Pair<Integer, ArrayList<Integer>> getSales(int i) {

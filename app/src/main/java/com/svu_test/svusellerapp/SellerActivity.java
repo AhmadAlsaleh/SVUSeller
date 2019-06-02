@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,12 +36,16 @@ public class SellerActivity extends AppCompatActivity {
     private Bitmap selectedBM;
     private LinearLayout sellerEditLL;
     private Button sellerEditBTN, sellerEditCancelBTN;
+    private LinearLayout addSellerLL;
+    private FloatingActionButton addSellerFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller);
 
+        addSellerFAB = findViewById(R.id.addSellerFAB);
+        addSellerLL = findViewById(R.id.addSellerLL);
         sellerIV = findViewById(R.id.addSellerIV);
         addSellerBTN = findViewById(R.id.addSellerBTN);
         addSellerNameET = findViewById(R.id.addSellerNameET);
@@ -102,6 +107,13 @@ public class SellerActivity extends AppCompatActivity {
             }
         });
 
+        addSellerFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSellerLL.setVisibility(View.VISIBLE);
+            }
+        });
+
         ArrayList<SellerModel> sellerModels = new DBHelper(this).getAllSellers();
         sellerRV = findViewById(R.id.sellersRV);
         sellerRV.setHasFixedSize(true);
@@ -153,6 +165,15 @@ public class SellerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (addSellerLL.getVisibility() == View.VISIBLE) {
+            addSellerLL.setVisibility(View.GONE);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
