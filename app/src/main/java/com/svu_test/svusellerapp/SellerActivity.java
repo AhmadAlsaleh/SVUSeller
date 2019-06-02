@@ -52,7 +52,7 @@ public class SellerActivity extends AppCompatActivity {
 
         final ArrayAdapter aa = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"Cost", "North", "South", "East", "Lebanon"}
+                new String[]{"Coast", "North", "South", "East", "Lebanon"}
         );
         addSellerRegionSP.setAdapter(aa);
 

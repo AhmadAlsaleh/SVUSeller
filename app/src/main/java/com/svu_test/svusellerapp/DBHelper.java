@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DBName = "svu_seller";
-    private static final int DBVersion = 1;
+    private static final int DBVersion = 2;
 
     private static final String CREATE_SELLER_TABLE = "Create Table if not exists Sellers (" +
             "sellerID INTEGER primary key autoincrement," +
@@ -30,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "month varchar(15)," +
             "year varchar(4)," +
             "amount INTEGER(12)," +
-            "sellerRegion varchar(200) not null," +
+            "region varchar(200) not null," +
             "sellerID INTEGER);";
     private static final String DROP_SALES_TABLE = "DROP Table if exists Sales;";
 
@@ -116,16 +117,70 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("month", saleModel.getMonth());
         contentValues.put("year", saleModel.getYear());
         contentValues.put("amount", saleModel.getAmount());
-        contentValues.put("sellerRegion", saleModel.getRegion());
+        contentValues.put("region", saleModel.getRegion());
         contentValues.put("sellerID", saleModel.getSellerID());
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.insert("Sales", null, contentValues);
     }
 
+
+    public ArrayList<SaleModel> selectSales(String id, String year, String month) {
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        @SuppressLint("Recycle")
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT amount,region FROM Sales WHERE sellerID='" + id +
+                        "'AND year='" + year +
+                        "'AND month='" + month + "';", null);
+
+        ArrayList<SaleModel> saleModels = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                String region = cursor.getString(cursor.getColumnIndex("region"));
+                String amount = cursor.getString(cursor.getColumnIndex("amount"));
+                saleModels.add(new SaleModel("", id, year, month, Integer.parseInt(amount), region));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return saleModels;
+    }
+
+
+    public void updateSale(SaleModel saleModel) {
+
+        Log.e("sales", saleModel.getRegion() + " - " + saleModel.getAmount());
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount", saleModel.getAmount());
+
+        Log.e("sql", "sellerID='" + saleModel.getSellerID() + "' AND " +
+                "month='" + saleModel.getMonth() + "' AND " +
+                "year='" + saleModel.getYear() + "';");
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.update("Sales", contentValues,
+                "sellerID='" + saleModel.getSellerID() + "' AND " +
+                        "month='" + saleModel.getMonth() + "' AND " +
+                        "region='" + saleModel.getRegion() + "' AND " +
+                        "year='" + saleModel.getYear() + "';",
+                null);
+    }
+
     // endregion
 
     // region com
+
+    public void updateCommission(CommissionModel commissionModel) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount", commissionModel.getAmount());
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.update("Commission", contentValues,
+                "sellerID='" + commissionModel.getSellerID() + "' AND " +
+                        "month='" + commissionModel.getMonth() + "' AND " +
+                        "year='" + commissionModel.getYear() + "';",
+                null);
+    }
 
     public void insertCommission(CommissionModel commissionModel) {
         ContentValues contentValues = new ContentValues();
@@ -136,6 +191,46 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.insert("Commission", null, contentValues);
+    }
+
+    public ArrayList<CommissionModel> selectCommission(String id, String year, String month) {
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        @SuppressLint("Recycle")
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT amount FROM Commission WHERE sellerID='" + id +
+                "'AND year='" + year +
+                "'AND month='" + month + "';", null);
+
+        ArrayList<CommissionModel> commissionModels = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                String amount = cursor.getString(cursor.getColumnIndex("amount"));
+                commissionModels.add(new CommissionModel("", "", year, month, Integer.parseInt(amount)));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return commissionModels;
+    }
+
+
+    public boolean checkCom(String id, String year, String month) {
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        @SuppressLint("Recycle")
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT amount FROM Commission WHERE sellerID='" + id +
+                "'AND year='" + year +
+                "'AND month='" + month + "';", null);
+
+        ArrayList<CommissionModel> commissionModels = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                String amount = cursor.getString(cursor.getColumnIndex("amount"));
+                commissionModels.add(new CommissionModel("", "", year, month, Integer.parseInt(amount)));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return commissionModels.size() <= 0;
     }
 
     // endregion
@@ -154,4 +249,5 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_COM_TABLE);
         onCreate(db);
     }
+
 }

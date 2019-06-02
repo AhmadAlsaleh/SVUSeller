@@ -19,4 +19,16 @@
         android:layout_height="wrap_content"
         android:text="info"/>
 
+    <Button
+        android:id="@+id/toSalesBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Sales"/>
+
+    <Button
+        android:id="@+id/toComBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Commission"/>
+
 </LinearLayout>

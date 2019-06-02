@@ -2,6 +2,8 @@ package com.svu_test.svusellerapp;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,20 +17,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class SellerInfoActivity extends AppCompatActivity {
 
     private ImageView infoIV;
-    private Spinner infoSP;
+    private Spinner infoSP, monthSP;
     private TextView infoRegionTV;
     private ArrayList<SellerModel> sellerModels;
 
     private Button calcComBTN, saveComBTN;
     private TextView infoComTV;
-    private EditText yearET, monthET, coastET, northET, southET, eastET, lebanonET;
+    private EditText yearET, coastET, northET, southET, eastET, lebanonET;
     private int selectedSeller = 0;
+    private int finalCom = 0;
+
+    private void clearData() {
+        yearET.setText("");
+        coastET.setText("");
+        northET.setText("");
+        southET.setText("");
+        eastET.setText("");
+        lebanonET.setText("");
+        finalCom = 0;
+        infoComTV.setText("Your Commission");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +51,11 @@ public class SellerInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_seller_info);
 
         findViews();
+
+        monthSP = findViewById(R.id.infoMonthSP);
+        monthSP.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                StaticData.months()));
 
         sellerModels = new DBHelper(this).getAllSellers();
         ArrayList<String> sellers = new ArrayList<>();
@@ -63,6 +83,7 @@ public class SellerInfoActivity extends AppCompatActivity {
         });
 
         calcComBTN.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 if (checkInput()) {
@@ -80,9 +101,90 @@ public class SellerInfoActivity extends AppCompatActivity {
                             com += (int) (i * 0.03);
                         }
                     }
-                    infoComTV.setText(String.valueOf(com));
+                    finalCom = com;
+                    infoComTV.setText(String.valueOf(com) + " S.P.");
 
                 }
+            }
+        });
+
+        saveComBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!checkInput()) {
+                    Toast.makeText(SellerInfoActivity.this, "Check your Input", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                final DBHelper dbHelper = new DBHelper(SellerInfoActivity.this);
+                if (dbHelper.checkCom(sellerModels.get(selectedSeller).getId(),
+                        yearET.getText().toString(), monthSP.getSelectedItem().toString())) {
+
+                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            Integer.parseInt(coastET.getText().toString()), "Coast"));
+
+                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            Integer.parseInt(northET.getText().toString()), "North"));
+
+                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            Integer.parseInt(southET.getText().toString()), "South"));
+
+                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            Integer.parseInt(eastET.getText().toString()), "East"));
+
+                    dbHelper.insertSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
+
+                    dbHelper.insertCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
+                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                            finalCom));
+
+                    clearData();
+
+                } else {
+                    new AlertDialog.Builder(SellerInfoActivity.this)
+                            .setMessage("This Commission is already exist,\nWe will replace it, Are you agree?")
+                            .setNegativeButton("No", null)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            Integer.parseInt(coastET.getText().toString()), "Coast"));
+
+                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            Integer.parseInt(northET.getText().toString()), "North"));
+
+                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            Integer.parseInt(southET.getText().toString()), "South"));
+
+                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            Integer.parseInt(eastET.getText().toString()), "East"));
+
+                                    dbHelper.updateSale(new SaleModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            Integer.parseInt(lebanonET.getText().toString()), "Lebanon"));
+
+                                    dbHelper.updateCommission(new CommissionModel("", sellerModels.get(selectedSeller).getId(),
+                                            yearET.getText().toString(), monthSP.getSelectedItem().toString(),
+                                            finalCom));
+
+                                    clearData();
+                                }
+                            })
+                            .create()
+                            .show();
+                }
+
             }
         });
 
@@ -98,7 +200,6 @@ public class SellerInfoActivity extends AppCompatActivity {
         infoComTV = findViewById(R.id.infoComTV);
 
         yearET = findViewById(R.id.infoYearET);
-        monthET = findViewById(R.id.infoMonthET);
         coastET = findViewById(R.id.coastET);
         northET = findViewById(R.id.northET);
         southET = findViewById(R.id.southET);
@@ -149,7 +250,6 @@ public class SellerInfoActivity extends AppCompatActivity {
 
     private boolean checkInput() {
         return !yearET.getText().toString().isEmpty() &&
-                !monthET.getText().toString().isEmpty() &&
                 !coastET.getText().toString().isEmpty() &&
                 !northET.getText().toString().isEmpty() &&
                 !southET.getText().toString().isEmpty() &&

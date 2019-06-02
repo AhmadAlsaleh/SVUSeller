@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SellerActivity" />
-        <activity android:name=".SellerInfoActivity"></activity>
+        <activity android:name=".SellerInfoActivity" />
+        <activity android:name=".SearchSalesActivity" />
+        <activity android:name=".CommissionActivity"></activity>
     </application>
 
 </manifest>
